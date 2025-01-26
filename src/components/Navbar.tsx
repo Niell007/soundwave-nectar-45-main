@@ -18,6 +18,10 @@ const Navbar = () => {
     { name: "Profile", path: "/profile", icon: <User className="h-4 w-4" /> },
   ];
 
+  const handleLiveClick = () => {
+    window.open('https://kick.com/soundmasterlive', '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <nav className="bg-background border-b border-border fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,11 +45,11 @@ const Navbar = () => {
               </Link>
             ))}
             <Button
-              onClick={() => navigate('/live-lesson')}
+              onClick={handleLiveClick}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
             >
               <Video className="h-4 w-4" />
-              Live Lesson
+              Listening Live
             </Button>
           </div>
 
@@ -78,13 +82,13 @@ const Navbar = () => {
             ))}
             <Button
               onClick={() => {
-                navigate('/live-lesson');
+                handleLiveClick();
                 setIsOpen(false);
               }}
               className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
             >
               <Video className="h-4 w-4" />
-              Live Lesson
+              Listening Live
             </Button>
           </div>
         </div>

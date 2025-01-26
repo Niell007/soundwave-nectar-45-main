@@ -5,13 +5,26 @@ import { Button } from "@/components/ui/button";
 import StreamControls from "@/components/live-stream/StreamControls";
 import StreamStats from "@/components/live-stream/StreamStats";
 import InfoSection from "@/components/live-lesson/InfoSection";
+import StreamProxy from "@/components/live-stream/StreamProxy";
 import { toast } from "@/hooks/use-toast";
+import { useStreamQuality } from "@/hooks/useStreamQuality";
+
+// Use embed URLs
+const STREAM_URL = "https://player.kick.com/soundmasterlive?allowfullscreen=true";
+const CHAT_URL = "https://kick.com/soundmasterlive/chat-embed";
 
 const LiveLesson = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quality, setQuality] = useState('auto');
   const [isChatOpen, setIsChatOpen] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+
+  const { metrics } = useStreamQuality({
+    updateInterval: 1000,
+    minBitrate: 1500,
+    targetFps: 30,
+  });
 
   const handleQualityChange = (newQuality: string) => {
     setQuality(newQuality);
@@ -35,6 +48,7 @@ const LiveLesson = () => {
     console.error("Failed to load stream iframe");
     setIsLoading(false);
     setError("Failed to load the live stream. Please try refreshing the page.");
+    setRetryCount(prev => prev + 1);
     toast({
       variant: "destructive",
       title: "Stream Error",
@@ -46,6 +60,7 @@ const LiveLesson = () => {
     console.log("Retrying stream connection");
     setIsLoading(true);
     setError(null);
+    setRetryCount(0);
     toast({
       title: "Retrying Connection",
       description: "Attempting to reconnect to the stream...",
@@ -60,8 +75,8 @@ const LiveLesson = () => {
         isChatOpen={isChatOpen}
         onToggleChat={() => setIsChatOpen(!isChatOpen)}
         healthStatus={{
-          buffering: false,
-          viewCount: 0
+          buffering: metrics.bufferingEvents > 0,
+          viewCount: 0,
         }}
       />
 
@@ -81,44 +96,42 @@ const LiveLesson = () => {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle>Stream Error</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
-              <Button 
-                onClick={handleRetry}
-                className="mt-4"
-                variant="destructive"
-              >
-                Retry Connection
-              </Button>
+              {retryCount < 3 && (
+                <Button 
+                  onClick={handleRetry}
+                  className="mt-4"
+                  variant="destructive"
+                >
+                  Retry Connection
+                </Button>
+              )}
             </Alert>
           )}
 
           <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-            <iframe
-              src="https://kick.com/soundmasterlive/embed"
+            <StreamProxy
+              key={retryCount}
+              src={STREAM_URL}
+              title="Live Stream"
               className={`absolute top-0 left-0 w-full h-full rounded-lg ${
                 isLoading ? 'hidden' : 'block'
               }`}
-              title="Kick.com Live Stream"
-              frameBorder="0"
-              scrolling="no"
-              allowFullScreen={true}
               onLoad={handleIframeLoad}
               onError={handleIframeError}
-              allow="autoplay; fullscreen; picture-in-picture"
-              sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
             />
           </div>
 
           <StreamStats
             healthStatus={{
-              bitrate: 0,
-              fps: 0,
-              latency: 0
+              bitrate: metrics.bitrate,
+              fps: metrics.fps,
+              latency: metrics.latency
             }}
             streamStats={{
-              duration: 0,
-              peakViewers: 0,
-              qualityChanges: 0,
-              bufferingEvents: 0
+              duration: metrics.duration,
+              peakViewers: metrics.peakViewers,
+              qualityChanges: metrics.qualityChanges,
+              bufferingEvents: metrics.bufferingEvents
             }}
           />
         </div>
@@ -126,14 +139,11 @@ const LiveLesson = () => {
         {isChatOpen && (
           <div className="w-96">
             <div className="relative w-full h-[600px] bg-background rounded-lg border">
-              <iframe
-                src="https://kick.com/soundmasterlive/chat-embed"
-                title="Kick.com Chat"
+              <StreamProxy
+                key={`chat-${retryCount}`}
+                src={CHAT_URL}
+                title="Stream Chat"
                 className="w-full h-full rounded-lg"
-                frameBorder="0"
-                scrolling="yes"
-                allow="autoplay; fullscreen"
-                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
               />
             </div>
           </div>

@@ -1,71 +1,45 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Activity, ExternalLink } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface StreamStatsProps {
-  healthStatus: {
-    bitrate: number;
-    fps: number;
-    latency: number;
-  };
-  streamStats: {
-    duration: number;
-    peakViewers: number;
-    qualityChanges: number;
-    bufferingEvents: number;
-  };
+  username?: string;
 }
 
-const StreamStats = ({ healthStatus, streamStats }: StreamStatsProps) => {
+const StreamStats: React.FC<StreamStatsProps> = ({ username = 'soundmasterlive' }) => {
   return (
-    <div className="space-y-4 mt-4">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Stream Health</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <h3 className="text-sm font-semibold mb-1">Bitrate</h3>
-              <p className="text-lg">{(healthStatus.bitrate / 1000).toFixed(1)} Mbps</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold mb-1">FPS</h3>
-              <p className="text-lg">{healthStatus.fps}</p>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold mb-1">Latency</h3>
-              <p className="text-lg">{healthStatus.latency}ms</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Stream Analytics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-4 gap-4 text-sm">
-            <div>
-              <h3 className="font-medium mb-1">Duration</h3>
-              <p>{Math.floor(streamStats.duration)}s</p>
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Peak Viewers</h3>
-              <p>{streamStats.peakViewers}</p>
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Quality Changes</h3>
-              <p>{streamStats.qualityChanges}</p>
-            </div>
-            <div>
-              <h3 className="font-medium mb-1">Buffering Events</h3>
-              <p>{streamStats.bufferingEvents}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="bg-card shadow-lg hover:shadow-xl transition-shadow duration-200">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center space-x-2 text-lg font-bold">
+          <Activity className="w-5 h-5 text-primary" />
+          <span>Stream Info</span>
+        </CardTitle>
+      </CardHeader>
+      <Separator className="mb-4" />
+      <CardContent>
+        <Button 
+          variant="outline" 
+          className="w-full flex items-center justify-center space-x-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+          asChild
+        >
+          <a 
+            href={`https://kick.com/${username}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            <span>Watch on Kick.com</span>
+            <ExternalLink className="w-4 h-4" />
+          </a>
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
