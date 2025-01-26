@@ -1,6 +1,11 @@
 # Soundmaster DJ Services Platform
 
-A full-stack web application for managing DJ services, bookings, and music library.
+A full-stack web application for managing DJ services, bookings, and music library. Built with React, TypeScript, and Supabase.
+
+## 📚 Documentation
+
+- [Supabase Integration Guide](./docs/SUPABASE.md) - Complete guide to Supabase setup and usage
+- [Architecture Overview](./docs/ARCHITECTURE.md) - System architecture and design patterns
 
 ## 🚀 Quick Start
 
@@ -8,7 +13,7 @@ A full-stack web application for managing DJ services, bookings, and music libra
 
 - Node.js 18+ (LTS recommended)
 - npm 9+
-- A Supabase account (for backend services)
+- Supabase account (already configured)
 
 ### Installation
 
@@ -47,23 +52,34 @@ src/
 ├── lib/            # Utility functions and helpers
 ├── pages/          # Page components
 └── types/          # TypeScript type definitions
-
 ```
 
-## 🔧 Configuration
+## 🔧 Key Features
 
-### Environment Setup
+1. **Authentication**
+   - Email-based authentication
+   - Admin privileges
+   - Protected routes
 
-The project uses Supabase for backend services. Configuration is managed through the Supabase dashboard.
+2. **Music Library**
+   - Song management
+   - Karaoke system
+   - File uploads
 
-### IDE Setup
+3. **Booking System**
+   - Event scheduling
+   - Calendar integration
+   - Real-time updates
 
-This project includes configurations for VS Code and other popular IDEs. Key features:
+4. **Admin Dashboard**
+   - User management
+   - Content moderation
+   - System settings
 
-- TypeScript support
-- ESLint integration
-- Prettier formatting
-- Debug configurations
+5. **Live Lessons**
+   - Real-time streaming
+   - Chat functionality
+   - Quality controls
 
 ## 🛠️ Development
 
@@ -81,6 +97,27 @@ npm run lint
 npm run build
 ```
 
+## 🔄 Supabase Integration
+
+The project is already configured with Supabase:
+- Project URL: `https://onijobnfjuuoafcygtjb.supabase.co`
+- Types are auto-generated
+- Edge Functions are deployed
+- Real-time subscriptions are configured
+
+See [Supabase Integration Guide](./docs/SUPABASE.md) for details.
+
+## 📦 Key Dependencies
+
+- React 18
+- Vite
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Supabase
+- React Query
+- React Router
+
 ## 🧪 Testing
 
 ```bash
@@ -91,44 +128,32 @@ npm run test
 npm run test:watch
 ```
 
-## 📦 Key Dependencies
+## 🔐 Security
 
-- React 18
-- Vite
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Supabase
-- TanStack Query
-- Lucide Icons
+- JWT-based authentication
+- Row Level Security (RLS)
+- Input validation
+- XSS prevention
+- File upload validation
 
-## 🎨 Customization
+## 🚀 Deployment
 
-### Theme Customization
+1. Build the project:
+```bash
+npm run build
+```
 
-Modify `tailwind.config.ts` for theme changes. The app uses a design system built on Tailwind CSS and shadcn/ui.
+2. Edge Functions are automatically deployed to Supabase
 
-### Adding New Features
+3. Frontend can be deployed to any static hosting service
 
-1. Create new components in appropriate directories
-2. Update routes in `src/components/routing/AppRoutes.tsx`
-3. Add new API endpoints in Supabase Edge Functions
-4. Update types in `src/types/`
+## 📝 Contributing
 
-## 📚 Documentation
+1. Follow the existing code structure
+2. Maintain type safety with Supabase
+3. Update documentation when adding features
+4. Add tests for new functionality
 
-- [Supabase Dashboard](https://supabase.com/dashboard/project/onijobnfjuuoafcygtjb)
-- [shadcn/ui Components](https://ui.shadcn.com)
-- [TanStack Query](https://tanstack.com/query)
+## 📫 Support
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
+Check the [Architecture Overview](./docs/ARCHITECTURE.md) for common issues and solutions.

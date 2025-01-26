@@ -3,11 +3,27 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, User, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme/theme-provider";
+import { useLiveLessonUrl } from "@/hooks/useLiveLessonUrl";
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+  const { data: kickUrl, isLoading } = useLiveLessonUrl();
+  const { toast } = useToast();
+
+  const handleLiveClick = () => {
+    if (!kickUrl) {
+      toast({
+        title: "Error",
+        description: "Live stream URL not configured",
+        variant: "destructive",
+      });
+      return;
+    }
+    window.open(kickUrl, '_blank');
+  };
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -41,11 +57,11 @@ const Navbar = () => {
               </Link>
             ))}
             <Button
-              onClick={() => navigate('/live-lesson')}
+              onClick={() => window.open("https://kick.com/soundmasterlive", "_blank")}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
             >
               <Video className="h-4 w-4" />
-              Live Lesson
+              Listening Live
             </Button>
           </div>
 
@@ -78,13 +94,13 @@ const Navbar = () => {
             ))}
             <Button
               onClick={() => {
-                navigate('/live-lesson');
+                window.open("https://kick.com/soundmasterlive", "_blank");
                 setIsOpen(false);
               }}
               className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
             >
               <Video className="h-4 w-4" />
-              Live Lesson
+              Listening Live
             </Button>
           </div>
         </div>
