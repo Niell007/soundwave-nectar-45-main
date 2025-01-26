@@ -32,14 +32,21 @@ const App = () => {
         <AdminProvider>
           <TooltipProvider>
             <ErrorBoundary>
+              {/* Toast Notifications */}
               <Toaster />
               <Sonner />
+              
+              {/* Auth State */}
               <AuthStateManager queryClient={queryClient} />
-              <div className="min-h-screen bg-background">
+              
+              {/* Main Layout */}
+              <div className="min-h-screen bg-background flex flex-col">
                 <Navbar />
-                <main className="pt-16">
+                <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16">
                   <AppRoutes />
                 </main>
+                
+                {/* Fixed Elements */}
                 <div className="fixed bottom-4 right-4 z-50">
                   <ChatBot />
                 </div>

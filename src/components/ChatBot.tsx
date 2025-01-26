@@ -1,149 +1,163 @@
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, X, Loader2, Send } from "lucide-react";
-import ChatMessage from "./chat/ChatMessage";
-import ChatInput from "./chat/ChatInput";
-import { useChatBot } from "@/hooks/useChatBot";
+import { Bot, Send, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from "@/lib/utils";
-import { useAdmin } from "@/contexts/AdminContext";
 
-const QUICK_ACTIONS = [
-  { label: "Book an Event", query: "I'd like to book an event" },
-  { label: "Request a Song", query: "Can I request a song?" },
-  { label: "Services & Pricing", query: "What are your services and pricing?" },
-  { label: "Live Lessons", query: "Tell me about live lessons" },
-];
+interface Message {
+  id: string;
+  content: string;
+  sender: 'user' | 'bot';
+  error?: boolean;
+}
 
-const ADMIN_ACTIONS = [
-  { label: "View Stats", query: "/admin stats" },
-  { label: "User List", query: "/admin users" },
-  { label: "Settings", query: "/admin settings" },
-];
+const ChatBot: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      content: "Hi! I'm your DJ assistant. Ask me anything about music, playlists, or event planning!",
+      sender: 'bot'
+    }
+  ]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-const ChatBot = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { isAdmin } = useAdmin();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const { message, messages, isLoading, setMessage, handleSendMessage } = useChatBot();
-  const [isMinimized, setIsMinimized] = useState(false);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    scrollToBottom();
   }, [messages]);
 
-  const handleQuickAction = (query: string) => {
-    setMessage(query);
-    handleSendMessage();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: input.trim(),
+      sender: 'user'
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Simulated API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I'm still in development, but I'll be able to help you with music recommendations and event planning soon!",
+        sender: 'bot'
+      };
+      
+      setMessages(prev => [...prev, botMessage]);
+    } catch (err) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I couldn't process your request. Please try again.",
+        sender: 'bot',
+        error: true
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      setError('Failed to get response from the chatbot');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <>
-      {isOpen && (
-        <Card 
-          className={cn(
-            "fixed bottom-20 right-4 w-80 md:w-96 shadow-xl flex flex-col dark:bg-gray-800 transition-all duration-300",
-            isMinimized ? "h-[60px]" : "h-[500px]"
-          )}
-        >
-          <div className="p-4 border-b flex justify-between items-center bg-primary text-primary-foreground rounded-t-lg">
-            <div className="flex items-center gap-2">
-              <MessageCircle className="h-5 w-5" />
-              <h3 className="font-semibold">Soundmaster Assistant</h3>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMinimized(!isMinimized)}
-                className="hover:bg-primary-dark"
-              >
-                {isMinimized ? "+" : "-"}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="hover:bg-primary-dark"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+    <Card className="w-full max-w-md mx-auto flex flex-col h-[500px] p-4 gap-4" role="complementary" aria-label="DJ Assistant Chat">
+      <div className="flex items-center gap-2 pb-2 border-b">
+        <Bot className="w-6 h-6 text-primary" aria-hidden="true" />
+        <h2 className="text-lg font-semibold">DJ Assistant</h2>
+      </div>
 
-          {!isMinimized && (
-            <>
-              <ScrollArea ref={scrollRef} className="flex-1 p-4">
-                <div className="space-y-4">
-                  {messages.length === 0 && (
-                    <div className="text-center text-muted-foreground p-4">
-                      <p>👋 Hi! I'm your Soundmaster assistant.</p>
-                      <p className="mt-2">How can I help you today?</p>
-                    </div>
-                  )}
-                  {messages.map((msg, index) => (
-                    <ChatMessage
-                      key={index}
-                      content={msg.content}
-                      type={msg.type}
-                    />
-                  ))}
-                  {isLoading && (
-                    <div className="flex justify-center">
-                      <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                    </div>
-                  )}
-                </div>
-              </ScrollArea>
-
-              <div className="p-4 border-t dark:border-gray-700">
-                <div className="grid grid-cols-2 gap-2 mb-4">
-                  {QUICK_ACTIONS.map((action) => (
-                    <Button
-                      key={action.label}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleQuickAction(action.query)}
-                      className="text-sm"
-                    >
-                      {action.label}
-                    </Button>
-                  ))}
-                  {isAdmin && ADMIN_ACTIONS.map((action) => (
-                    <Button
-                      key={action.label}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleQuickAction(action.query)}
-                      className="text-sm bg-primary/10"
-                    >
-                      {action.label}
-                    </Button>
-                  ))}
-                </div>
-                <ChatInput
-                  message={message}
-                  isLoading={isLoading}
-                  onMessageChange={setMessage}
-                  onSendMessage={handleSendMessage}
+      <ScrollArea className="flex-1 pr-4" aria-live="polite">
+        <div className="space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={cn(
+                "flex gap-2 items-start",
+                message.sender === 'user' && "justify-end"
+              )}
+            >
+              {message.sender === 'bot' && (
+                <Bot 
+                  className="w-6 h-6 mt-2 text-primary shrink-0" 
+                  aria-hidden="true"
                 />
+              )}
+              <div
+                className={cn(
+                  "rounded-lg p-3 max-w-[80%]",
+                  message.sender === 'user' ? "bg-primary text-primary-foreground" : "bg-muted",
+                  message.error && "bg-destructive/10 text-destructive"
+                )}
+                role={message.sender === 'bot' ? 'status' : 'none'}
+              >
+                {message.error && (
+                  <AlertCircle 
+                    className="w-4 h-4 inline-block mr-2 text-destructive" 
+                    aria-label="Error"
+                  />
+                )}
+                <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
               </div>
-            </>
-          )}
-        </Card>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+      </ScrollArea>
+
+      {error && (
+        <div 
+          className="text-sm text-destructive bg-destructive/10 p-2 rounded" 
+          role="alert"
+        >
+          {error}
+        </div>
       )}
 
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 rounded-full w-12 h-12 p-0 bg-primary hover:bg-primary/90 shadow-lg animate-bounce"
-        aria-label="Open chat"
+      <form 
+        onSubmit={handleSubmit} 
+        className="flex gap-2"
+        aria-label="Chat message form"
       >
-        <MessageCircle className="h-6 w-6" />
-      </Button>
-    </>
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder="Type your message..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={isLoading}
+          aria-label="Message input"
+          aria-disabled={isLoading}
+        />
+        <Button 
+          type="submit" 
+          disabled={isLoading || !input.trim()}
+          aria-label="Send message"
+        >
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+          ) : (
+            <Send className="w-4 h-4" aria-hidden="true" />
+          )}
+          <span className="sr-only">Send</span>
+        </Button>
+      </form>
+    </Card>
   );
 };
 
