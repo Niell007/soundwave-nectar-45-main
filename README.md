@@ -1,159 +1,140 @@
-# Soundmaster DJ Services Platform
+# Soundmaster CRM Platform
 
-A full-stack web application for managing DJ services, bookings, and music library. Built with React, TypeScript, and Supabase.
+A comprehensive CRM system for managing radio shows, playlists, bookings, and audience engagement.
 
-## 📚 Documentation
+## Features
 
-- [Supabase Integration Guide](./docs/SUPABASE.md) - Complete guide to Supabase setup and usage
-- [Architecture Overview](./docs/ARCHITECTURE.md) - System architecture and design patterns
+- Advanced CRM Dashboard
+- Radio Show Management
+- Playlist Organization
+- Booking System
+- Real-time Analytics
+- AI Integration
+- User Management
 
-## 🚀 Quick Start
+## Tech Stack
+
+- Frontend: React + TypeScript
+- Backend: Supabase
+- Database: PostgreSQL
+- Real-time: Supabase Realtime
+- Storage: Supabase Storage + External Storage
+- Authentication: Supabase Auth
+- AI: OpenAI Integration
+
+## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ (LTS recommended)
-- npm 9+
-- Supabase account (already configured)
+- Node.js 16+
+- npm or yarn
+- Supabase CLI
+- Git
 
 ### Installation
 
+1. Clone the repository:
 ```bash
-# Clone the repository
-git clone <your-repo-url>
+git clone [your-repo-url]
+cd soundmaster-crm
+```
 
-# Navigate to project directory
-cd soundmaster-dj
-
-# Install dependencies
+2. Install dependencies:
+```bash
 npm install
+```
 
-# Start development server
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
+Edit `.env` with your configuration values.
+
+4. Initialize Supabase:
+```bash
+supabase init
+supabase link --project-ref your-project-ref
+```
+
+5. Run database migrations:
+```bash
+supabase db reset
+```
+
+6. Start the development server:
+```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:8080`
+### Database Migrations
 
-## 🏗️ Project Structure
+All migrations are stored in `supabase/migrations/`:
+- `0001_initial_schema.sql`: Base tables and functions
+- `0002_crm_schema.sql`: CRM-specific tables and functions
 
-```
-src/
-├── components/        # Reusable UI components
-│   ├── admin/        # Admin dashboard components
-│   ├── auth/         # Authentication components
-│   ├── chat/         # Chat interface components
-│   ├── design/       # Design system components
-│   ├── home/         # Homepage components
-│   ├── shared/       # Shared utility components
-│   ├── songs/        # Music library components
-│   └── ui/           # shadcn/ui components
-├── contexts/         # React context providers
-├── hooks/           # Custom React hooks
-├── integrations/    # Third-party service integrations
-├── lib/            # Utility functions and helpers
-├── pages/          # Page components
-└── types/          # TypeScript type definitions
-```
-
-## 🔧 Key Features
-
-1. **Authentication**
-   - Email-based authentication
-   - Admin privileges
-   - Protected routes
-
-2. **Music Library**
-   - Song management
-   - Karaoke system
-   - File uploads
-
-3. **Booking System**
-   - Event scheduling
-   - Calendar integration
-   - Real-time updates
-
-4. **Admin Dashboard**
-   - User management
-   - Content moderation
-   - System settings
-
-5. **Live Lessons**
-   - Real-time streaming
-   - Chat functionality
-   - Quality controls
-
-## 🛠️ Development
-
+To apply migrations:
 ```bash
-# Start development server
-npm run dev
-
-# Type checking
-npm run typecheck
-
-# Lint code
-npm run lint
-
-# Build for production
-npm run build
+supabase db reset
 ```
 
-## 🔄 Supabase Integration
+### Environment Variables
 
-The project is already configured with Supabase:
-- Project URL: `https://onijobnfjuuoafcygtjb.supabase.co`
-- Types are auto-generated
-- Edge Functions are deployed
-- Real-time subscriptions are configured
+Required environment variables:
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+- See `.env.example` for all required variables
 
-See [Supabase Integration Guide](./docs/SUPABASE.md) for details.
+### Development Workflow
 
-## 📦 Key Dependencies
-
-- React 18
-- Vite
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Supabase
-- React Query
-- React Router
-
-## 🧪 Testing
-
+1. Create feature branch:
 ```bash
-# Run tests
-npm run test
-
-# Watch mode
-npm run test:watch
+git checkout -b feature/your-feature-name
 ```
 
-## 🔐 Security
+2. Make changes and commit:
+```bash
+git add .
+git commit -m "feat: your feature description"
+```
 
-- JWT-based authentication
-- Row Level Security (RLS)
-- Input validation
-- XSS prevention
-- File upload validation
+3. Push changes:
+```bash
+git push origin feature/your-feature-name
+```
 
-## 🚀 Deployment
+4. Create pull request on GitHub
 
-1. Build the project:
+### Deployment
+
+1. Build the application:
 ```bash
 npm run build
 ```
 
-2. Edge Functions are automatically deployed to Supabase
+2. Deploy to your hosting platform of choice:
+```bash
+npm run deploy
+```
 
-3. Frontend can be deployed to any static hosting service
+## Documentation
 
-## 📝 Contributing
+- [Project Setup](./docs/PROJECT_SETUP.md)
+- [CRM Implementation](./docs/CRM_IMPLEMENTATION.md)
+- [API Documentation](./docs/API.md)
+- [Frontend Documentation](./docs/FRONTEND.md)
 
-1. Follow the existing code structure
-2. Maintain type safety with Supabase
-3. Update documentation when adding features
-4. Add tests for new functionality
+## Contributing
 
-## 📫 Support
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
 
-Check the [Architecture Overview](./docs/ARCHITECTURE.md) for common issues and solutions.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support, email support@soundmaster.com or create an issue in the repository.
