@@ -11,11 +11,12 @@ A comprehensive CRM system for managing the Soundmaster DJ Services Platform.
 - 🔒 Role-Based Access Control
 - 📅 Event Scheduling
 - 💾 Automated Backups
+- 📧 Email Notifications
 
 ## Tech Stack
 
 - **Frontend**: Next.js, TypeScript, Tailwind CSS
-- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Backend**: Supabase (PostgreSQL, Auth, Storage, Email)
 - **State Management**: React Query, Context API
 - **Deployment**: Vercel (Frontend), Supabase (Backend)
 
@@ -25,6 +26,7 @@ A comprehensive CRM system for managing the Soundmaster DJ Services Platform.
 - [Authentication](./docs/AUTHENTICATION.md)
 - [CRM Implementation](./docs/CRM_IMPLEMENTATION.md)
 - [Backup & Restore](./docs/BACKUP_RESTORE.md)
+- [Email Notifications](./docs/NOTIFICATIONS.md)
 
 ## Getting Started
 
@@ -87,6 +89,26 @@ soundmaster-crm/
 └── docs/            # Project documentation
 ```
 
+## Features
+
+### Authentication
+- Secure user authentication
+- Role-based access control
+- Profile management
+- Session handling
+
+### Email Notifications
+- Automated email notifications
+- Custom email templates
+- Notification status tracking
+- Error handling and retries
+
+### Data Management
+- Automated backups
+- Data restoration
+- Type safety
+- Real-time updates
+
 ## Security
 
 - Row Level Security (RLS) enabled
@@ -94,6 +116,7 @@ soundmaster-crm/
 - Audit logging
 - Automated backups
 - Secure authentication
+- Email verification
 
 ## Contributing
 
