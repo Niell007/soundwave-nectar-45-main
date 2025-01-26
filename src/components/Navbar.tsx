@@ -1,124 +1,90 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, User, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme/theme-provider";
-import { cn } from "@/lib/utils";
-
-interface NavItem {
-  name: string;
-  path: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  className?: string;
-}
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
 
-  const navItems: NavItem[] = [
+  const navItems = [
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
     { name: "Admin", path: "/admin" },
-    { name: "Profile", path: "/profile", icon: User, className: "h-4 w-4" },
+    { name: "Profile", path: "/profile", icon: <User className="h-4 w-4" /> },
   ];
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
-
   return (
-    <nav className="bg-background border-b">
+    <nav className="bg-background border-b border-border fixed w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Desktop menu */}
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0">
-              <Video className="h-8 w-8 text-primary" />
+        <div className="flex justify-between h-16">
+          <div className="flex-shrink-0 flex items-center">
+            <Link to="/" className="text-2xl font-bold text-primary">
+              Soundmaster
             </Link>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="text-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
-                    aria-current={item.path === '/' ? 'page' : undefined}
-                  >
-                    {item.icon && <item.icon className={item.className} />}
-                    {item.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
           </div>
-
-          {/* Theme toggle */}
-          <div className="hidden md:block">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? "🌞" : "🌙"}
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMenu}
-              aria-expanded={isOpen}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
-                key={item.path}
+                key={item.name}
                 to={item.path}
-                className={cn(
-                  "text-foreground hover:text-primary transition-colors duration-200",
-                  "block px-3 py-2 rounded-md text-base font-medium",
-                  "flex items-center gap-2"
-                )}
-                onClick={closeMenu}
-                aria-current={item.path === '/' ? 'page' : undefined}
+                className="text-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2"
               >
-                {item.icon && <item.icon className={item.className} />}
+                {item.icon}
                 {item.name}
               </Link>
             ))}
             <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setTheme(theme === "dark" ? "light" : "dark");
-                closeMenu();
-              }}
-              className="w-full justify-start px-3"
+              onClick={() => navigate('/live-lesson')}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
             >
-              {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
+              <Video className="h-4 w-4" />
+              Live Lesson
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-foreground hover:text-primary"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.path}
+                className="flex items-center gap-2 px-3 py-2 text-foreground hover:text-primary transition-colors duration-200"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.icon}
+                {item.name}
+              </Link>
+            ))}
+            <Button
+              onClick={() => {
+                navigate('/live-lesson');
+                setIsOpen(false);
+              }}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2 justify-center"
+            >
+              <Video className="h-4 w-4" />
+              Live Lesson
             </Button>
           </div>
         </div>
