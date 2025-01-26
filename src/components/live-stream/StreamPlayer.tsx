@@ -48,6 +48,19 @@ const StreamPlayer: React.FC<StreamPlayerProps> = ({ username = 'soundmasterlive
     window.open(`https://kick.com/${username}`, '_blank', 'noopener,noreferrer');
   };
 
+  const streamHealthMetrics = {
+    bitrate: 0,
+    fps: 0,
+    latency: 0,
+  };
+
+  const streamStatsData = {
+    duration: 0,
+    peakViewers: 0,
+    qualityChanges: 0,
+    bufferingEvents: 0,
+  };
+
   return (
     <ErrorBoundary FallbackComponent={StreamError}>
       <Suspense fallback={<StreamSkeleton />}>
@@ -156,7 +169,10 @@ const StreamPlayer: React.FC<StreamPlayerProps> = ({ username = 'soundmasterlive
             </div>
           </Card>
           <div className="w-full max-w-[400px] justify-self-center">
-            <StreamStats username={username} />
+            <StreamStats 
+              healthStatus={streamHealthMetrics}
+              streamStats={streamStatsData}
+            />
           </div>
         </div>
       </Suspense>

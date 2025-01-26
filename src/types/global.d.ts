@@ -71,3 +71,69 @@ declare namespace NodeJS {
     NODE_ENV: 'development' | 'production' | 'test';
   }
 }
+
+import { Database as SupabaseDatabase } from './supabase';
+
+declare global {
+  type Database = SupabaseDatabase;
+
+  interface StreamMetrics {
+    bitrate: number;
+    fps: number;
+    latency: number;
+    duration: number;
+    peakViewers: number;
+    qualityChanges: number;
+    bufferingEvents: number;
+  }
+
+  interface StreamQualityOptions {
+    updateInterval: number;
+    minBitrate: number;
+    targetBitrate: number;
+    minFps: number;
+    targetFps: number;
+  }
+
+  interface ChatMessage {
+    id: string;
+    content: string;
+    userId: string;
+    username: string;
+    timestamp: string;
+  }
+
+  interface User {
+    id: string;
+    email: string;
+    username: string;
+    avatarUrl?: string;
+    role: 'user' | 'admin' | 'moderator';
+    createdAt: string;
+    updatedAt: string;
+  }
+
+  interface Stream {
+    id: string;
+    title: string;
+    description?: string;
+    userId: string;
+    status: 'live' | 'offline';
+    startedAt?: string;
+    endedAt?: string;
+    viewerCount: number;
+    peakViewerCount: number;
+    quality: string;
+    thumbnailUrl?: string;
+  }
+
+  interface ApiResponse<T> {
+    data: T | null;
+    error: {
+      code: string;
+      message: string;
+    } | null;
+  }
+}
+
+export {};

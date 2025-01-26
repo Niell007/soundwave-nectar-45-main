@@ -1,57 +1,63 @@
 import React, { useEffect, useRef } from 'react';
+import { useStore } from '@/lib/state/store';
 
 interface StreamProxyProps {
-  url: string;
-  quality?: string;
-  onLoad?: () => void;
-  onError?: (error: string) => void;
+  streamUrl: string;
+  title: string;
   className?: string;
+  onLoad?: () => void;
+  onError?: () => void;
 }
 
 const StreamProxy: React.FC<StreamProxyProps> = ({
-  url,
-  quality = 'auto',
+  streamUrl,
+  title,
+  className = '',
   onLoad,
   onError,
-  className = ''
 }) => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const { setStreamData } = useStore();
 
   useEffect(() => {
-    const handleLoad = () => {
-      onLoad?.();
-    };
+    if (videoRef.current) {
+      const video = videoRef.current;
 
-    const handleError = () => {
-      onError?.('Failed to load stream. Please try again later.');
-    };
+      video.addEventListener('loadeddata', () => {
+        setStreamData({
+          id: streamUrl,
+          title,
+          status: 'live',
+          viewerCount: 0,
+          startedAt: new Date().toISOString(),
+        });
+        onLoad?.();
+      });
 
-    const iframe = iframeRef.current;
-    if (iframe) {
-      iframe.addEventListener('load', handleLoad);
-      iframe.addEventListener('error', handleError);
+      video.addEventListener('error', () => {
+        setStreamData(null);
+        onError?.();
+      });
+
+      return () => {
+        video.removeEventListener('loadeddata', onLoad ?? (() => {}));
+        video.removeEventListener('error', onError ?? (() => {}));
+      };
     }
-
-    return () => {
-      if (iframe) {
-        iframe.removeEventListener('load', handleLoad);
-        iframe.removeEventListener('error', handleError);
-      }
-    };
-  }, [onLoad, onError]);
-
-  // Extract username from URL
-  const username = 'soundmasterlive'; // Hardcoded for now, could be made dynamic
+  }, [streamUrl, title, onLoad, onError, setStreamData]);
 
   return (
-    <iframe
-      ref={iframeRef}
-      src={`https://player.kick.com/${username}`}
-      className={`w-full h-full ${className}`}
-      style={{ aspectRatio: '16/9' }}
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    />
+    <video
+      ref={videoRef}
+      className={className}
+      controls
+      autoPlay
+      playsInline
+      src={streamUrl}
+    >
+      <source src={streamUrl} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
   );
 };
 

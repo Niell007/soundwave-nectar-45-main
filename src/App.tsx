@@ -1,8 +1,10 @@
-import { Toaster } from "@/components/ui/toaster";
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from '@/components/theme/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "@/components/theme/theme-provider";
 import Navbar from "./components/Navbar";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AuthStateManager from "./components/auth/AuthStateManager";
@@ -25,7 +27,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="ui-theme">
@@ -40,17 +42,19 @@ const App = () => {
               <AuthStateManager queryClient={queryClient} />
               
               {/* Main Layout */}
-              <div className="min-h-screen bg-background flex flex-col">
-                <Navbar />
-                <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16">
-                  <AppRoutes />
-                </main>
-                
-                {/* Fixed Elements */}
-                <div className="fixed bottom-4 right-4 z-50">
-                  <ChatBot />
+              <BrowserRouter>
+                <div className="min-h-screen bg-background flex flex-col">
+                  <Navbar />
+                  <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+                    <AppRoutes />
+                  </main>
+                  
+                  {/* Fixed Elements */}
+                  <div className="fixed bottom-4 right-4 z-50">
+                    <ChatBot />
+                  </div>
                 </div>
-              </div>
+              </BrowserRouter>
             </ErrorBoundary>
           </TooltipProvider>
         </AdminProvider>

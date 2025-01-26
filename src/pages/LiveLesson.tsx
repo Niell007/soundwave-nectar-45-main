@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -8,17 +8,19 @@ import InfoSection from "@/components/live-lesson/InfoSection";
 import StreamProxy from "@/components/live-stream/StreamProxy";
 import { toast } from "@/hooks/use-toast";
 import { useStreamQuality } from "@/hooks/useStreamQuality";
+import { useStore } from '@/lib/state/store';
 
 // Use embed URLs
 const STREAM_URL = "https://player.kick.com/soundmasterlive?allowfullscreen=true";
 const CHAT_URL = "https://kick.com/soundmasterlive/chat-embed";
 
-const LiveLesson = () => {
+const LiveLesson: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quality, setQuality] = useState('auto');
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
+  const { stream } = useStore();
 
   const { metrics } = useStreamQuality({
     updateInterval: 1000,
@@ -26,13 +28,17 @@ const LiveLesson = () => {
     targetFps: 30,
   });
 
-  const handleQualityChange = (newQuality: string) => {
+  const handleQualityChange = useCallback((newQuality: string) => {
     setQuality(newQuality);
     toast({
       title: "Quality Changed",
       description: `Stream quality set to ${newQuality}`,
     });
-  };
+  }, []);
+
+  const toggleChat = useCallback(() => {
+    setIsChatOpen((prev) => !prev);
+  }, []);
 
   const handleIframeLoad = () => {
     console.log("Stream iframe loaded successfully");
@@ -67,17 +73,32 @@ const LiveLesson = () => {
     });
   };
 
+  const streamHealthStatus = {
+    buffering: metrics.bufferingEvents > 0,
+    viewCount: stream.data?.viewerCount ?? 0,
+  };
+
+  const streamStatsData = {
+    duration: metrics.duration,
+    peakViewers: metrics.peakViewers,
+    qualityChanges: metrics.qualityChanges,
+    bufferingEvents: metrics.bufferingEvents,
+  };
+
+  const streamHealthMetrics = {
+    bitrate: metrics.bitrate,
+    fps: metrics.fps,
+    latency: metrics.latency,
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
       <StreamControls
         quality={quality}
         onQualityChange={handleQualityChange}
         isChatOpen={isChatOpen}
-        onToggleChat={() => setIsChatOpen(!isChatOpen)}
-        healthStatus={{
-          buffering: metrics.bufferingEvents > 0,
-          viewCount: 0,
-        }}
+        onToggleChat={toggleChat}
+        healthStatus={streamHealthStatus}
       />
 
       <div className="flex gap-4">
@@ -122,17 +143,8 @@ const LiveLesson = () => {
           </div>
 
           <StreamStats
-            healthStatus={{
-              bitrate: metrics.bitrate,
-              fps: metrics.fps,
-              latency: metrics.latency
-            }}
-            streamStats={{
-              duration: metrics.duration,
-              peakViewers: metrics.peakViewers,
-              qualityChanges: metrics.qualityChanges,
-              bufferingEvents: metrics.bufferingEvents
-            }}
+            healthStatus={streamHealthMetrics}
+            streamStats={streamStatsData}
           />
         </div>
 

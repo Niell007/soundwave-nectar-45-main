@@ -1,29 +1,29 @@
-import { createClient } from '@supabase/supabase-js';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from './types';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import type { Database } from './types';
 
-// Create a single supabase client for interacting with your database
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-    },
-    realtime: {
-      params: {
-        eventsPerSecond: 10,
-      },
-    },
-  }
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Create a client for use in client components
-export const createClient = () => {
-  return createClientComponentClient<Database>();
-};
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
+
+export const supabase = createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
+    },
+  },
+});
+
+export type SupabaseClient = typeof supabase;
+export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
+export type Enums<T extends keyof Database['public']['Enums']> = Database['public']['Enums'][T];
 
 // Utility functions for common Supabase operations
 export const supabaseUtils = {
@@ -213,6 +213,79 @@ export const supabaseUtils = {
       });
     },
   },
+};
+
+// Type-safe database functions
+export const getUser = async (userId: string) => {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', userId)
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
+export const updateUserProfile = async (userId: string, updates: Partial<Tables<'profiles'>>) => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId);
+
+  if (error) throw error;
+  return data;
+};
+
+export const getStreamData = async (streamId: string) => {
+  const { data, error } = await supabase
+    .from('streams')
+    .select(`
+      *,
+      user:users(*)
+    `)
+    .eq('id', streamId)
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getChatMessages = async (streamId: string) => {
+  const { data, error } = await supabase
+    .from('chat_messages')
+    .select(`
+      *,
+      user:users(*)
+    `)
+    .eq('stream_id', streamId)
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+  return data;
+};
+
+export const subscribeToChat = (
+  streamId: string,
+  callback: (payload: Tables<'chat_messages'>) => void
+) => {
+  return supabase
+    .channel(`chat:${streamId}`)
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'chat_messages',
+        filter: `stream_id=eq.${streamId}`
+      },
+      (payload) => callback(payload.new as Tables<'chat_messages'>)
+    )
+    .subscribe();
+};
+
+export const createClient = () => {
+  return createSupabaseClient<Database>(supabaseUrl, supabaseAnonKey);
 };
 
 export default supabase;
