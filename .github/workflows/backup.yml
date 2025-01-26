@@ -1,0 +1,34 @@
+name: Database Backup
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm install
+        
+    - name: Run backup
+      run: npm run backup
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        
+    - name: Upload backup
+      uses: actions/upload-artifact@v2
+      with:
+        name: database-backup-${{ github.sha }}
+        path: backups/
+        retention-days: 30  # Keep backups for 30 days

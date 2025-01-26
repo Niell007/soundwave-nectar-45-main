@@ -418,3 +418,223 @@ For questions or support, contact the development team.
 ---
 Last Updated: 2025-01-26
 Status: Planning Phase
+
+# CRM Implementation Guide
+
+## Project Overview
+
+The Soundmaster CRM is a comprehensive dashboard for managing the online radio platform. It integrates with Supabase for backend services and provides features for content management, show scheduling, and user engagement.
+
+## Architecture
+
+### Backend (Supabase)
+
+- **Project URL**: https://jekavwkyvwzundiqierd.supabase.co
+- **Database**: PostgreSQL with PostgREST API
+- **Authentication**: Supabase Auth with JWT
+- **Storage**: Supabase Storage for media files
+- **Real-time**: Supabase Realtime for live updates
+
+### Frontend
+
+- **Framework**: Next.js with TypeScript
+- **State Management**: React Query + Context API
+- **UI Components**: Tailwind CSS + Headless UI
+- **Type Safety**: Generated types from Supabase schema
+
+## Database Schema
+
+### Core Tables
+
+1. **profiles**
+   - User profiles with admin flags
+   - RLS: Public read, authenticated write for own profile
+
+2. **radio_shows**
+   - Show details and metadata
+   - RLS: Public read, admin/owner write
+
+3. **show_schedules**
+   - Show timing and recurrence
+   - RLS: Public read, admin/owner write
+
+4. **playlists**
+   - Playlist management
+   - RLS: Public read for public playlists, creator access for private
+
+### CRM Features
+
+1. **listener_analytics**
+   - Real-time and historical listener data
+   - RLS: Admin only
+
+2. **advertisement_campaigns**
+   - Campaign management and tracking
+   - RLS: Admin only
+
+3. **dj_profiles**
+   - Extended DJ information
+   - RLS: Public read, owner write
+
+## Authentication Flow
+
+1. **User Registration**
+   ```typescript
+   const { user, error } = await supabase.auth.signUp({
+     email,
+     password,
+   });
+   ```
+
+2. **Profile Creation**
+   ```typescript
+   const { data, error } = await supabase
+     .from('profiles')
+     .insert([{ id: user.id, username }]);
+   ```
+
+3. **Role Assignment**
+   ```typescript
+   const { data, error } = await supabase
+     .from('user_roles')
+     .insert([{ user_id: user.id, role: 'dj' }]);
+   ```
+
+## Real-time Subscriptions
+
+1. **Show Updates**
+   ```typescript
+   const showSubscription = supabase
+     .from('radio_shows')
+     .on('*', (payload) => {
+       // Handle show updates
+     })
+     .subscribe();
+   ```
+
+2. **Listener Analytics**
+   ```typescript
+   const analyticsSubscription = supabase
+     .from('listener_analytics')
+     .on('INSERT', (payload) => {
+       // Update analytics dashboard
+     })
+     .subscribe();
+   ```
+
+## API Integration
+
+### Show Management
+```typescript
+export const createShow = async (show: RadioShow) => {
+  const { data, error } = await supabase
+    .from('radio_shows')
+    .insert([show]);
+  return { data, error };
+};
+```
+
+### Playlist Management
+```typescript
+export const updatePlaylist = async (id: string, updates: Partial<Playlist>) => {
+  const { data, error } = await supabase
+    .from('playlists')
+    .update(updates)
+    .eq('id', id);
+  return { data, error };
+};
+```
+
+## Error Handling
+
+1. **API Errors**
+   ```typescript
+   try {
+     const { data, error } = await supabase.from('shows').select('*');
+     if (error) throw error;
+     return data;
+   } catch (error) {
+     console.error('Error:', error.message);
+     throw error;
+   }
+   ```
+
+2. **Authentication Errors**
+   ```typescript
+   const { user, error } = await supabase.auth.signIn({ email, password });
+   if (error) {
+     if (error.status === 400) {
+       // Handle invalid credentials
+     } else {
+       // Handle other auth errors
+     }
+   }
+   ```
+
+## Performance Optimization
+
+1. **Query Optimization**
+   - Use `.select('id, title')` to limit returned fields
+   - Implement pagination for large datasets
+   - Use appropriate indexes (already set up in migrations)
+
+2. **Caching Strategy**
+   - Use React Query for client-side caching
+   - Implement stale-while-revalidate pattern
+   - Cache invalidation on real-time updates
+
+## Security Considerations
+
+1. **Row Level Security**
+   - All tables have RLS enabled
+   - Policies enforce user-level access control
+   - Admin checks use `is_admin()` function
+
+2. **API Security**
+   - JWT authentication for all requests
+   - Rate limiting on API endpoints
+   - Input validation and sanitization
+
+## Deployment
+
+1. **Environment Setup**
+   - Copy `.env.example` to `.env.local`
+   - Set up required environment variables
+   - Configure Supabase project settings
+
+2. **Database Migrations**
+   - Run migrations in order
+   - Verify RLS policies
+   - Check database indexes
+
+## Monitoring
+
+1. **Error Tracking**
+   - Implement error boundary components
+   - Set up error logging service
+   - Monitor Supabase dashboard
+
+2. **Performance Monitoring**
+   - Track API response times
+   - Monitor real-time subscription performance
+   - Check database query performance
+
+## Next Steps
+
+1. [ ] Set up authentication system
+2. [ ] Create admin panel layout
+3. [ ] Implement dashboard features
+4. [ ] Set up real-time listeners
+5. [ ] Configure storage buckets
+
+## Quality Assurance
+
+1. **Type Safety**
+   - Use generated types from Supabase
+   - Implement proper error handling
+   - Maintain consistent state management
+
+2. **Testing**
+   - Unit tests for utilities
+   - Integration tests for API calls
+   - E2E tests for critical flows

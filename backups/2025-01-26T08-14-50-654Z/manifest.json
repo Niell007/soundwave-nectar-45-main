@@ -1,0 +1,82 @@
+{
+  "timestamp": "2025-01-26T08-14-50-654Z",
+  "tables": [
+    {
+      "name": "profiles",
+      "success": true
+    },
+    {
+      "name": "songs",
+      "success": true
+    },
+    {
+      "name": "events",
+      "success": true
+    },
+    {
+      "name": "bookings",
+      "success": true
+    },
+    {
+      "name": "blog_posts",
+      "success": true
+    },
+    {
+      "name": "settings",
+      "success": true
+    },
+    {
+      "name": "radio_shows",
+      "success": true
+    },
+    {
+      "name": "show_schedules",
+      "success": true
+    },
+    {
+      "name": "show_hosts",
+      "success": true
+    },
+    {
+      "name": "playlists",
+      "success": true
+    },
+    {
+      "name": "playlist_songs",
+      "success": true
+    },
+    {
+      "name": "listener_analytics",
+      "success": true
+    },
+    {
+      "name": "advertisement_campaigns",
+      "success": true
+    },
+    {
+      "name": "advertisement_metrics",
+      "success": true
+    },
+    {
+      "name": "user_roles",
+      "success": true
+    },
+    {
+      "name": "dj_profiles",
+      "success": true
+    },
+    {
+      "name": "ai_broadcasters",
+      "success": true
+    },
+    {
+      "name": "messages",
+      "success": true
+    },
+    {
+      "name": "notifications",
+      "success": true
+    }
+  ],
+  "supabaseUrl": "https://jekavwkyvwzundiqierd.supabase.co"
+}
