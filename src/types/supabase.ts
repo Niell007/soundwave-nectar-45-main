@@ -6,102 +6,72 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
-      ai_broadcasters: {
-        Row: {
-          id: string
-          name: string
-          voice_config: Json
-          personality_type: string | null
-          active_status: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          voice_config?: Json
-          personality_type?: string | null
-          active_status?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          voice_config?: Json
-          personality_type?: string | null
-          active_status?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       advertisement_campaigns: {
         Row: {
+          budget: number | null
+          created_at: string | null
+          description: string | null
+          end_date: string
           id: string
           name: string
-          description: string | null
           start_date: string
-          end_date: string
-          budget: number | null
+          status: string | null
           target_audience: string | null
-          status: string
-          created_at: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
+          budget?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date: string
           id?: string
           name: string
-          description?: string | null
           start_date: string
-          end_date: string
-          budget?: number | null
+          status?: string | null
           target_audience?: string | null
-          status?: string
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
+          budget?: number | null
+          created_at?: string | null
+          description?: string | null
+          end_date?: string
           id?: string
           name?: string
-          description?: string | null
           start_date?: string
-          end_date?: string
-          budget?: number | null
+          status?: string | null
           target_audience?: string | null
-          status?: string
-          created_at?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
       advertisement_metrics: {
         Row: {
+          campaign_id: string | null
+          clicks: number | null
+          conversions: number | null
           id: string
-          campaign_id: string
-          timestamp: string
-          impressions: number
-          clicks: number
-          conversions: number
+          impressions: number | null
+          timestamp: string | null
         }
         Insert: {
+          campaign_id?: string | null
+          clicks?: number | null
+          conversions?: number | null
           id?: string
-          campaign_id: string
-          timestamp?: string
-          impressions?: number
-          clicks?: number
-          conversions?: number
+          impressions?: number | null
+          timestamp?: string | null
         }
         Update: {
+          campaign_id?: string | null
+          clicks?: number | null
+          conversions?: number | null
           id?: string
-          campaign_id?: string
-          timestamp?: string
-          impressions?: number
-          clicks?: number
-          conversions?: number
+          impressions?: number | null
+          timestamp?: string | null
         }
         Relationships: [
           {
@@ -110,174 +80,180 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "advertisement_campaigns"
             referencedColumns: ["id"]
-          }
+          },
         ]
+      }
+      ai_broadcasters: {
+        Row: {
+          active_status: boolean | null
+          created_at: string | null
+          id: string
+          name: string
+          personality_type: string | null
+          updated_at: string | null
+          voice_config: Json
+        }
+        Insert: {
+          active_status?: boolean | null
+          created_at?: string | null
+          id?: string
+          name: string
+          personality_type?: string | null
+          updated_at?: string | null
+          voice_config?: Json
+        }
+        Update: {
+          active_status?: boolean | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          personality_type?: string | null
+          updated_at?: string | null
+          voice_config?: Json
+        }
+        Relationships: []
       }
       blog_posts: {
         Row: {
-          id: string
-          title: string
           content: string
+          created_at: string | null
+          id: string
           image_url: string | null
+          title: string
           user_id: string | null
-          created_at: string
         }
         Insert: {
-          id?: string
-          title: string
           content: string
+          created_at?: string | null
+          id?: string
           image_url?: string | null
+          title: string
           user_id?: string | null
-          created_at?: string
         }
         Update: {
-          id?: string
-          title?: string
           content?: string
+          created_at?: string | null
+          id?: string
           image_url?: string | null
+          title?: string
           user_id?: string | null
-          created_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "blog_posts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       bookings: {
         Row: {
-          id: string
-          user_id: string | null
+          created_at: string | null
           event_date: string
+          id: string
           time: string
-          created_at: string
+          user_id: string | null
         }
         Insert: {
-          id?: string
-          user_id?: string | null
+          created_at?: string | null
           event_date: string
+          id?: string
           time: string
-          created_at?: string
+          user_id?: string | null
         }
         Update: {
-          id?: string
-          user_id?: string | null
+          created_at?: string | null
           event_date?: string
+          id?: string
           time?: string
-          created_at?: string
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "bookings_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       dj_profiles: {
         Row: {
-          id: string
-          user_id: string
           bio: string | null
-          experience: string | null
-          specialties: string[] | null
+          created_at: string | null
           equipment: string[] | null
+          experience: string | null
           hourly_rate: number | null
-          created_at: string
-          updated_at: string
+          id: string
+          specialties: string[] | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
-          id?: string
-          user_id: string
           bio?: string | null
-          experience?: string | null
-          specialties?: string[] | null
+          created_at?: string | null
           equipment?: string[] | null
+          experience?: string | null
           hourly_rate?: number | null
-          created_at?: string
-          updated_at?: string
+          id?: string
+          specialties?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
-          id?: string
-          user_id?: string
           bio?: string | null
-          experience?: string | null
-          specialties?: string[] | null
+          created_at?: string | null
           equipment?: string[] | null
+          experience?: string | null
           hourly_rate?: number | null
-          created_at?: string
-          updated_at?: string
+          id?: string
+          specialties?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "dj_profiles_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       events: {
         Row: {
-          id: string
-          title: string
-          description: string | null
+          created_at: string | null
           date: string
-          location: string | null
+          description: string | null
+          id: string
           image_url: string | null
-          created_at: string
+          location: string | null
+          title: string
         }
         Insert: {
-          id?: string
-          title: string
-          description?: string | null
+          created_at?: string | null
           date: string
-          location?: string | null
+          description?: string | null
+          id?: string
           image_url?: string | null
-          created_at?: string
+          location?: string | null
+          title: string
         }
         Update: {
-          id?: string
-          title?: string
-          description?: string | null
+          created_at?: string | null
           date?: string
-          location?: string | null
+          description?: string | null
+          id?: string
           image_url?: string | null
-          created_at?: string
+          location?: string | null
+          title?: string
         }
         Relationships: []
       }
       listener_analytics: {
         Row: {
+          average_duration: unknown | null
           id: string
-          show_id: string | null
-          timestamp: string
           listener_count: number
           peak_listeners: number
-          average_duration: unknown | null
+          show_id: string | null
+          timestamp: string | null
         }
         Insert: {
+          average_duration?: unknown | null
           id?: string
-          show_id?: string | null
-          timestamp?: string
           listener_count?: number
           peak_listeners?: number
-          average_duration?: unknown | null
+          show_id?: string | null
+          timestamp?: string | null
         }
         Update: {
+          average_duration?: unknown | null
           id?: string
-          show_id?: string | null
-          timestamp?: string
           listener_count?: number
           peak_listeners?: number
-          average_duration?: unknown | null
+          show_id?: string | null
+          timestamp?: string | null
         }
         Relationships: [
           {
@@ -286,107 +262,84 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "radio_shows"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       messages: {
         Row: {
-          id: string
-          from_user_id: string | null
-          to_user_id: string | null
           content: string
-          read_status: boolean
-          created_at: string
+          created_at: string | null
+          from_user_id: string | null
+          id: string
+          read_status: boolean | null
+          to_user_id: string | null
         }
         Insert: {
-          id?: string
-          from_user_id?: string | null
-          to_user_id?: string | null
           content: string
-          read_status?: boolean
-          created_at?: string
+          created_at?: string | null
+          from_user_id?: string | null
+          id?: string
+          read_status?: boolean | null
+          to_user_id?: string | null
         }
         Update: {
-          id?: string
-          from_user_id?: string | null
-          to_user_id?: string | null
           content?: string
-          read_status?: boolean
-          created_at?: string
+          created_at?: string | null
+          from_user_id?: string | null
+          id?: string
+          read_status?: boolean | null
+          to_user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "messages_from_user_id_fkey"
-            columns: ["from_user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "messages_to_user_id_fkey"
-            columns: ["to_user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       notifications: {
         Row: {
-          id: string
-          user_id: string
-          type: string
           content: string
-          read_status: boolean
-          created_at: string
+          created_at: string | null
+          id: string
+          read_status: boolean | null
+          type: string
+          user_id: string | null
         }
         Insert: {
-          id?: string
-          user_id: string
-          type: string
           content: string
-          read_status?: boolean
-          created_at?: string
+          created_at?: string | null
+          id?: string
+          read_status?: boolean | null
+          type: string
+          user_id?: string | null
         }
         Update: {
-          id?: string
-          user_id?: string
-          type?: string
           content?: string
-          read_status?: boolean
-          created_at?: string
+          created_at?: string | null
+          id?: string
+          read_status?: boolean | null
+          type?: string
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       playlist_songs: {
         Row: {
+          added_at: string | null
           id: string
-          playlist_id: string
-          song_id: string
+          playlist_id: string | null
           position: number
-          added_at: string
+          song_id: string | null
         }
         Insert: {
+          added_at?: string | null
           id?: string
-          playlist_id: string
-          song_id: string
+          playlist_id?: string | null
           position: number
-          added_at?: string
+          song_id?: string | null
         }
         Update: {
+          added_at?: string | null
           id?: string
-          playlist_id?: string
-          song_id?: string
+          playlist_id?: string | null
           position?: number
-          added_at?: string
+          song_id?: string | null
         }
         Relationships: [
           {
@@ -402,165 +355,141 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "songs"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       playlists: {
         Row: {
-          id: string
-          name: string
-          description: string | null
+          created_at: string | null
           created_by: string | null
-          is_public: boolean
-          created_at: string
-          updated_at: string
+          description: string | null
+          id: string
+          is_public: boolean | null
+          name: string
+          updated_at: string | null
         }
         Insert: {
-          id?: string
-          name: string
-          description?: string | null
+          created_at?: string | null
           created_by?: string | null
-          is_public?: boolean
-          created_at?: string
-          updated_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          name: string
+          updated_at?: string | null
         }
         Update: {
-          id?: string
-          name?: string
-          description?: string | null
+          created_at?: string | null
           created_by?: string | null
-          is_public?: boolean
-          created_at?: string
-          updated_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          name?: string
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "playlists_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {
-          id: string
-          username: string | null
           avatar_url: string | null
+          created_at: string | null
+          id: string
           is_admin: boolean | null
-          created_at: string
+          username: string | null
         }
         Insert: {
-          id: string
-          username?: string | null
           avatar_url?: string | null
+          created_at?: string | null
+          id: string
           is_admin?: boolean | null
-          created_at?: string
+          username?: string | null
         }
         Update: {
-          id?: string
-          username?: string | null
           avatar_url?: string | null
+          created_at?: string | null
+          id?: string
           is_admin?: boolean | null
-          created_at?: string
+          username?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       radio_shows: {
         Row: {
-          id: string
-          title: string
-          description: string | null
-          show_type: string
-          duration: unknown
-          recurring: boolean
+          created_at: string | null
           created_by: string | null
-          created_at: string
-          updated_at: string
+          description: string | null
+          duration: unknown
+          id: string
+          recurring: boolean | null
+          show_type: string | null
+          title: string
+          updated_at: string | null
         }
         Insert: {
-          id?: string
-          title: string
-          description?: string | null
-          show_type: string
-          duration: unknown
-          recurring?: boolean
+          created_at?: string | null
           created_by?: string | null
-          created_at?: string
-          updated_at?: string
+          description?: string | null
+          duration: unknown
+          id?: string
+          recurring?: boolean | null
+          show_type?: string | null
+          title: string
+          updated_at?: string | null
         }
         Update: {
-          id?: string
-          title?: string
-          description?: string | null
-          show_type?: string
-          duration?: unknown
-          recurring?: boolean
+          created_at?: string | null
           created_by?: string | null
-          created_at?: string
-          updated_at?: string
+          description?: string | null
+          duration?: unknown
+          id?: string
+          recurring?: boolean | null
+          show_type?: string | null
+          title?: string
+          updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "radio_shows_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       settings: {
         Row: {
+          created_at: string | null
           key: string
+          updated_at: string | null
           value: string | null
-          created_at: string
-          updated_at: string
         }
         Insert: {
+          created_at?: string | null
           key: string
+          updated_at?: string | null
           value?: string | null
-          created_at?: string
-          updated_at?: string
         }
         Update: {
+          created_at?: string | null
           key?: string
+          updated_at?: string | null
           value?: string | null
-          created_at?: string
-          updated_at?: string
         }
         Relationships: []
       }
       show_hosts: {
         Row: {
+          created_at: string | null
           id: string
-          show_id: string
-          user_id: string
           role: string
-          created_at: string
+          show_id: string | null
+          user_id: string | null
         }
         Insert: {
+          created_at?: string | null
           id?: string
-          show_id: string
-          user_id: string
           role: string
-          created_at?: string
+          show_id?: string | null
+          user_id?: string | null
         }
         Update: {
+          created_at?: string | null
           id?: string
-          show_id?: string
-          user_id?: string
           role?: string
-          created_at?: string
+          show_id?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -570,45 +499,38 @@ export interface Database {
             referencedRelation: "radio_shows"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "show_hosts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
         ]
       }
       show_schedules: {
         Row: {
-          id: string
-          show_id: string
-          start_time: string
+          created_at: string | null
+          day_of_week: number | null
           end_time: string
-          day_of_week: number
-          is_recurring: boolean
-          created_at: string
-          updated_at: string
+          id: string
+          is_recurring: boolean | null
+          show_id: string | null
+          start_time: string
+          updated_at: string | null
         }
         Insert: {
-          id?: string
-          show_id: string
-          start_time: string
+          created_at?: string | null
+          day_of_week?: number | null
           end_time: string
-          day_of_week: number
-          is_recurring?: boolean
-          created_at?: string
-          updated_at?: string
+          id?: string
+          is_recurring?: boolean | null
+          show_id?: string | null
+          start_time: string
+          updated_at?: string | null
         }
         Update: {
-          id?: string
-          show_id?: string
-          start_time?: string
+          created_at?: string | null
+          day_of_week?: number | null
           end_time?: string
-          day_of_week?: number
-          is_recurring?: boolean
-          created_at?: string
-          updated_at?: string
+          id?: string
+          is_recurring?: boolean | null
+          show_id?: string | null
+          start_time?: string
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -617,63 +539,63 @@ export interface Database {
             isOneToOne: false
             referencedRelation: "radio_shows"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       songs: {
         Row: {
-          id: string
-          title: string
-          artist: string
           album: string | null
+          artist: string
+          created_at: string | null
           genre: string | null
-          year: number | null
-          url: string | null
+          id: string
           is_karaoke: boolean | null
-          created_at: string
+          title: string
+          url: string | null
+          year: number | null
         }
         Insert: {
-          id?: string
-          title: string
-          artist: string
           album?: string | null
+          artist: string
+          created_at?: string | null
           genre?: string | null
-          year?: number | null
-          url?: string | null
+          id?: string
           is_karaoke?: boolean | null
-          created_at?: string
+          title: string
+          url?: string | null
+          year?: number | null
         }
         Update: {
-          id?: string
-          title?: string
-          artist?: string
           album?: string | null
+          artist?: string
+          created_at?: string | null
           genre?: string | null
-          year?: number | null
-          url?: string | null
+          id?: string
           is_karaoke?: boolean | null
-          created_at?: string
+          title?: string
+          url?: string | null
+          year?: number | null
         }
         Relationships: []
       }
       user_roles: {
         Row: {
+          created_at: string | null
           id: string
           name: string
           permissions: Json
-          created_at: string
         }
         Insert: {
+          created_at?: string | null
           id?: string
           name: string
           permissions?: Json
-          created_at?: string
         }
         Update: {
+          created_at?: string | null
           id?: string
           name?: string
           permissions?: Json
-          created_at?: string
         }
         Relationships: []
       }
@@ -682,10 +604,6 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      check_schedule_conflicts: {
-        Args: Record<PropertyKey, never>
-        Returns: unknown
-      }
       is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -699,3 +617,100 @@ export interface Database {
     }
   }
 }
+
+type PublicSchema = Database[Extract<keyof Database, "public">]
+
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  PublicEnumNameOrOptions extends
+    | keyof PublicSchema["Enums"]
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never

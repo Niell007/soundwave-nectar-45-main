@@ -1,127 +1,99 @@
-# Soundmaster CRM Platform
+# Soundmaster CRM
 
-A comprehensive CRM system for managing radio shows, playlists, bookings, and audience engagement.
+A comprehensive CRM system for managing the Soundmaster DJ Services Platform.
 
 ## Features
 
-- Advanced CRM Dashboard
-- Radio Show Management
-- Playlist Organization
-- Booking System
-- Real-time Analytics
-- AI Integration
-- User Management
+- 🎵 Radio Show Management
+- 👥 User Authentication & Profiles
+- 📊 Analytics Dashboard
+- 📝 Content Management
+- 🔒 Role-Based Access Control
+- 📅 Event Scheduling
+- 💾 Automated Backups
 
 ## Tech Stack
 
-- Frontend: React + TypeScript
-- Backend: Supabase
-- Database: PostgreSQL
-- Real-time: Supabase Realtime
-- Storage: Supabase Storage + External Storage
-- Authentication: Supabase Auth
-- AI: OpenAI Integration
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 16+
-- npm or yarn
-- Supabase CLI
-- Git
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone [your-repo-url]
-cd soundmaster-crm
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
-Edit `.env` with your configuration values.
-
-4. Initialize Supabase:
-```bash
-supabase init
-supabase link --project-ref your-project-ref
-```
-
-5. Run database migrations:
-```bash
-supabase db reset
-```
-
-6. Start the development server:
-```bash
-npm run dev
-```
-
-### Database Migrations
-
-All migrations are stored in `supabase/migrations/`:
-- `0001_initial_schema.sql`: Base tables and functions
-- `0002_crm_schema.sql`: CRM-specific tables and functions
-
-To apply migrations:
-```bash
-supabase db reset
-```
-
-### Environment Variables
-
-Required environment variables:
-- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
-- See `.env.example` for all required variables
-
-### Development Workflow
-
-1. Create feature branch:
-```bash
-git checkout -b feature/your-feature-name
-```
-
-2. Make changes and commit:
-```bash
-git add .
-git commit -m "feat: your feature description"
-```
-
-3. Push changes:
-```bash
-git push origin feature/your-feature-name
-```
-
-4. Create pull request on GitHub
-
-### Deployment
-
-1. Build the application:
-```bash
-npm run build
-```
-
-2. Deploy to your hosting platform of choice:
-```bash
-npm run deploy
-```
+- **Frontend**: Next.js, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **State Management**: React Query, Context API
+- **Deployment**: Vercel (Frontend), Supabase (Backend)
 
 ## Documentation
 
 - [Project Setup](./docs/PROJECT_SETUP.md)
+- [Authentication](./docs/AUTHENTICATION.md)
 - [CRM Implementation](./docs/CRM_IMPLEMENTATION.md)
-- [API Documentation](./docs/API.md)
-- [Frontend Documentation](./docs/FRONTEND.md)
+- [Backup & Restore](./docs/BACKUP_RESTORE.md)
+
+## Getting Started
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/soundmaster-crm.git
+   cd soundmaster-crm
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your Supabase credentials
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Database Management
+
+### Backups
+```bash
+# Create a backup
+npm run backup
+
+# Restore from backup
+npm run restore ./backups/[timestamp]
+```
+
+### Migrations
+```bash
+# Run migrations
+npx supabase db push
+
+# Generate types
+npx supabase gen types typescript --local > src/types/supabase.ts
+```
+
+## Project Structure
+
+```
+soundmaster-crm/
+├── src/
+│   ├── components/    # Reusable UI components
+│   ├── context/       # React Context providers
+│   ├── hooks/         # Custom React hooks
+│   ├── lib/           # Utility functions and configs
+│   ├── pages/         # Next.js pages
+│   └── types/         # TypeScript type definitions
+├── public/           # Static assets
+├── supabase/         # Database migrations and config
+├── scripts/          # Utility scripts
+└── docs/            # Project documentation
+```
+
+## Security
+
+- Row Level Security (RLS) enabled
+- Role-based access control
+- Audit logging
+- Automated backups
+- Secure authentication
 
 ## Contributing
 
@@ -129,7 +101,7 @@ npm run deploy
 2. Create your feature branch
 3. Commit your changes
 4. Push to the branch
-5. Create a new Pull Request
+5. Create a Pull Request
 
 ## License
 
@@ -137,4 +109,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, email support@soundmaster.com or create an issue in the repository.
+For support, email support@soundmaster.com or join our Slack channel.
